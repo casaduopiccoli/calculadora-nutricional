@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora Nutricional - Casa Duo Piccoli</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #fffaf5;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1, h3 {
+      text-align: center;
+    }
+    .grupo {
+      margin-bottom: 20px;
+    }
+    .grupo strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    label {
+      display: block;
+      margin-bottom: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #d8a48f;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c3866e;
+    }
+    .resultado {
+      margin-top: 20px;
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculadora Nutricional</h1>
+
+  <div class="grupo">
+    <strong>Carboidrato (180g):</strong>
+    <label><input type="radio" name="carbo" value="arroz_branco"> Arroz Branco</label>
+    <label><input type="radio" name="carbo" value="arroz_integral"> Arroz Integral</label>
+    <label><input type="radio" name="carbo" value="penne"> Penne de sêmola</label>
+    <label><input type="radio" name="carbo" value="pure"> Purê</label>
+  </div>
+
+  <div class="grupo">
+    <strong>Proteína (120g):</strong>
+    <label><input type="radio" name="proteina" value="frango"> Filé de coxa e sobrecoxa</label>
+    <label><input type="radio" name="proteina" value="bife"> Iscas de filé acebolado</label>
+    <label><input type="radio" name="proteina" value="peixe"> Peixe assado</label>
+    <label><input type="radio" name="proteina" value="soja"> Proteína de soja</label>
+  </div>
+
+  <div class="grupo">
+    <strong>Acompanhamento (100g):</strong>
+    <label><input type="radio" name="acompanhamento" value="feijao"> Feijão</label>
+    <label><input type="radio" name="acompanhamento" value="lentilha"> Lentilha</label>
+    <label><input type="radio" name="acompanhamento" value="madeira"> Molho Madeira</label>
+    <label><input type="radio" name="acompanhamento" value="alho_poro"> Creme de alho-poró</label>
+  </div>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div id="resultado" class="resultado"></div>
+
+  <script>
+    const tabela = {
+      arroz_branco:  { nome: "Arroz branco", kcal: 129, proteina: 2.7, gordura: 0.3, carbo: 28 },
+      arroz_integral:{ nome: "Arroz integral", kcal: 111, proteina: 2.6, gordura: 0.9, carbo: 23 },
+      penne:         { nome: "Penne de sêmola", kcal: 131, proteina: 5, gordura: 0.6, carbo: 27 },
+      pure:          { nome: "Purê", kcal: 90, proteina: 1.5, gordura: 3.5, carbo: 13 },
+
+      frango:        { nome: "Filé de coxa e sobrecoxa", kcal: 174, proteina: 25, gordura: 8, carbo: 0 },
+      bife:          { nome: "Iscas de filé acebolado", kcal: 210, proteina: 27, gordura: 11, carbo: 2 },
+      peixe:         { nome: "Peixe assado", kcal: 140, proteina: 22, gordura: 5, carbo: 0 },
+      soja:          { nome: "Proteína de soja", kcal: 120, proteina: 12, gordura: 2, carbo: 9 },
+
+      feijao:        { nome: "Feijão", kcal: 76, proteina: 4.8, gordura: 0.5, carbo: 13.6 },
+      lentilha:      { nome: "Lentilha", kcal: 93, proteina: 7.6, gordura: 0.4, carbo: 16.9 },
+      madeira:       { nome: "Molho madeira", kcal: 45, proteina: 1.2, gordura: 3.5, carbo: 3.5 },
+      alho_poro:     { nome: "Creme de alho-poró", kcal: 60, proteina: 1, gordura: 4, carbo: 5 }
+    };
+
+    function calcular() {
+      const selecionados = {
+        carbo: document.querySelector('input[name="carbo"]:checked')?.value,
+        proteina: document.querySelector('input[name="proteina"]:checked')?.value,
+        acompanhamento: document.querySelector('input[name="acompanhamento"]:checked')?.value
+      };
+
+      const pesos = { carbo: 180, proteina: 120, acompanhamento: 100 };
+      let resultado = { kcal: 0, proteina: 0, gordura: 0, carbo: 0 };
+
+      for (let grupo in selecionados) {
+        const key = selecionados[grupo];
+        const dados = tabela[key];
+        const peso = pesos[grupo];
+
+        if (dados) {
+          resultado.kcal     += (peso / 100) * dados.kcal;
+          resultado.proteina += (peso / 100) * dados.proteina;
+          resultado.gordura  += (peso / 100) * dados.gordura;
+          resultado.carbo    += (peso / 100) * dados.carbo;
+        }
+      }
+
+      document.getElementById("resultado").innerHTML = `
+        <strong>Resultado Nutricional:</strong><br>
+        Calorias: ${resultado.kcal.toFixed(1)} kcal<br>
+        Proteínas: ${resultado.proteina.toFixed(1)} g<br>
+        Gorduras: ${resultado.gordura.toFixed(1)} g<br>
+        Carboidratos: ${resultado.carbo.toFixed(1)} g
+      `;
+    }
+  </script>
+
+</body>
+</html>
+
